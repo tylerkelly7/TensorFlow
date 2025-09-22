@@ -1,0 +1,83 @@
+name: TensorFlow
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - numpy
+  - pandas
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - jupyter
+  - xgboost
+  - lightgbm
+  - pytorch
+  - torchvision
+  - torchaudio
+  - transformers
+  - nltk
+  - spacy
+  - shap
+  - pip
+  - pip:
+      - lime
+      - tqdm
+      - joblib
+
+  # --------------------------------------------
+  # 💡 Recommended Extras (Uncomment as needed)
+  # --------------------------------------------
+
+  # - sqlalchemy
+  # - dask
+  # - polars
+  # - pyarrow
+  # - vaex
+  # - modin[ray]
+  # - datatable
+  # - pyspark
+
+  # - statsmodels
+  # - pmdarima
+  # - prophet
+  # - gluonts
+  # - darts
+
+  # - mlflow
+  # - wandb
+  # - tensorboard
+  # - hydra-core
+  # - prefect
+  # - dagster
+
+  # - pytorch-lightning
+  # - accelerate
+  # - keras
+  # - jax
+  # - flax
+
+  # - gensim
+  # - sentence-transformers
+  # - sumy
+  # - textblob
+  # - fuzzywuzzy
+
+  # - plotly
+  # - bokeh
+  # - altair
+  # - geopandas
+  # - folium
+
+  # - cryptography
+  # - python-decouple
+  # - pydantic
+
+  # - pre-commit
+  # - black
+  # - flake8
+  # - pytest
+  # - pytest-cov
+  # - tox
+  # - mypy
+  # - bandit

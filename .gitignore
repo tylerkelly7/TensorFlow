@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Jupyter
+.ipynb_checkpoints
+
+# Virtual environments
+.env/
+.venv/
+env/
+venv/
+
+# Data
+data/raw/*
+data/processed/*
+!data/.gitkeep
+
+# Reports
+reports/*.pdf
+reports/figures/*
+
+# Logs
+*.log
