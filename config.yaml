@@ -42,3 +42,11 @@ logging:
   plots_dir: "results/plots/"
   tensorboard_dir: "results/logs/"
   save_figures: true
+
+tracking:
+  use_mlflow: true
+  use_wandb: false
+  experiment_name: "TensorFlow"
+  mlflow_uri: "file:./results/mlruns"
+  wandb_project: "TensorFlow"
+  wandb_entity: null  # optional username or team name
