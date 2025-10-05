@@ -1,6 +1,5 @@
+#src/data_prep.py
 """
-src/data.py
------------
 Handles all dataset loading, preprocessing, and batching.
 Uses configuration from config/config.yaml to avoid hardcoding.
 """
