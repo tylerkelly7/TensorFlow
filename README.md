@@ -5,7 +5,8 @@
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
-![Coverage](https://img.shields.io/badge/coverage-85%25-
+![Coverage](https://img.shields.io/badge/coverage-85%25-green)
+![Docs](https://img.shields.io/badge/docs-online-blue)
 
 End-to-end TensorFlow repository demonstrating model development, reproducibility, and MLOps practices.  
 Includes experiment tracking, CI/CD testing, and modular designs.
