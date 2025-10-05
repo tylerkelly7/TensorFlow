@@ -137,16 +137,18 @@ import wandb
 
 def init_experiment_tracking(task_name):
     """
-    Initialize MLflow or Weights & Biases tracking session based on config flags.
-    Returns a context manager (for MLflow) or None (for W&B since it auto-handles sessions).
+    Initialize MLflow or Weights & Biases tracking based on config flags.
+    Returns a context handle (MLflow run object or W&B session).
     """
-    if config["tracking"]["use_mlflow"]:
+    run = None
+
+    if config["tracking"].get("use_mlflow", False):
         mlflow.set_tracking_uri(config["tracking"]["mlflow_uri"])
         mlflow.set_experiment(config["tracking"]["experiment_name"])
-        print(f"[INFO] MLflow tracking initialized at {config['tracking']['mlflow_uri']}")
-        return mlflow.start_run(run_name=task_name)
+        print(f"[INFO] MLflow tracking initialized → {config['tracking']['mlflow_uri']}")
+        run = mlflow.start_run(run_name=task_name)
 
-    elif config["tracking"]["use_wandb"]:
+    elif config["tracking"].get("use_wandb", False):
         wandb.login()
         wandb.init(
             project=config["tracking"]["wandb_project"],
@@ -154,38 +156,49 @@ def init_experiment_tracking(task_name):
             name=task_name,
             config=config,
         )
-        print(f"[INFO] Weights & Biases tracking initialized for {task_name}")
-        return None
+        print(f"[INFO] W&B tracking initialized for task: {task_name}")
 
     else:
         print("[INFO] Experiment tracking disabled.")
-        return None
+
+    return run
 
 
 def log_experiment_metrics(history, test_metrics, run=None, task_name=None):
     """
-    Logs metrics and artifacts to MLflow or W&B.
+    Log parameters, metrics, and artifacts to MLflow or W&B.
+    Does not close the session — call end_experiment_tracking() after.
     """
     train_metrics = {k: v[-1] for k, v in history.history.items() if not k.startswith("val_")}
     val_metrics = {k: v[-1] for k, v in history.history.items() if k.startswith("val_")}
     test_dict = {"test_loss": test_metrics[0], "test_acc": test_metrics[1]}
 
     # --- MLflow ---
-    if config["tracking"]["use_mlflow"] and run is not None:
-        mlflow.log_params(config["train"])
+    if config["tracking"].get("use_mlflow", False) and run is not None:
+        mlflow.log_params(config.get("train", {}))
         mlflow.log_metrics({**train_metrics, **val_metrics, **test_dict})
         mlflow.log_artifacts("Results/models")
         mlflow.log_artifacts("Results/logs")
-        print("[INFO] Metrics logged to MLflow.")
-        mlflow.end_run()
+        print("[INFO] Logged metrics and artifacts to MLflow.")
 
     # --- W&B ---
-    elif config["tracking"]["use_wandb"]:
+    elif config["tracking"].get("use_wandb", False):
         wandb.log({**train_metrics, **val_metrics, **test_dict})
+        print("[INFO] Logged metrics to Weights & Biases.")
+
+
+def end_experiment_tracking():
+    """
+    Cleanly close MLflow or W&B runs to allow next experiment to start.
+    """
+    if config["tracking"].get("use_mlflow", False):
+        if mlflow.active_run():
+            mlflow.end_run()
+            print("[INFO] MLflow run ended successfully.")
+
+    if config["tracking"].get("use_wandb", False):
         wandb.finish()
-        print("[INFO] Metrics logged to Weights & Biases.")   
-    
-    
+        print("[INFO] W&B session ended successfully.")
     
     
     
