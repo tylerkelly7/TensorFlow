@@ -1,0 +1,25 @@
+# ===========================================
+# TensorFlow_Projects Configurations
+# ===========================================
+
+global:
+  seed: 42
+  output_dir: "Results/"
+  log_dir: "Results/logs/"
+
+data:
+  mnist:
+    normalize: true
+    flatten: true
+  cifar10:
+    normalize: true
+  imdb:
+    num_words: 10000
+    maxlen: 200
+
+train:
+  batch_size: 64
+  epochs: 10
+  validation_split: 0.1
+  learning_rate: 0.001
+  early_stopping_patience: 3
