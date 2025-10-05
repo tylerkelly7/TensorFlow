@@ -1,0 +1,16 @@
+# Ignore unnecessary files for smaller build
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints
+data/raw/
+Results/logs/
+Results/models/
+Results/mlruns/
+notebooks/
+tests/
+.DS_Store
+.env
