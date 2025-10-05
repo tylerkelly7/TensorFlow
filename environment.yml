@@ -18,7 +18,7 @@ dependencies:
   - torchaudio
   - transformers
   - nltk
-	- tensorflow-datasets
+  - tensorflow-datasets
   - spacy
   - shap
   - pip
