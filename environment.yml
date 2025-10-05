@@ -13,7 +13,7 @@ dependencies:
   - xgboost
   - lightgbm
   - pytorch
-	- tensorflow
+  - tensorflow
   - torchvision
   - torchaudio
   - transformers
@@ -79,7 +79,7 @@ dependencies:
   # - black
   # - flake8
   - pytest
-	- pyyaml
+  - pyyaml
   # - pytest-cov
   # - tox
   # - mypy
