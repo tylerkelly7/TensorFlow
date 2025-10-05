@@ -1,11 +1,11 @@
 # ===========================================
-# TensorFlow_Projects Configurations
+# TensorFlow Configurations
 # ===========================================
 
 global:
   seed: 42
-  output_dir: "Results/"
-  log_dir: "Results/logs/"
+  output_dir: "results/"
+  log_dir: "results/logs/"
 
 data:
   mnist:
