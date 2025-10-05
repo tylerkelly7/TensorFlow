@@ -1,19 +1,128 @@
+# src/utils.py
 """
-Centralized seed control for reproducibility across runs.
+Reusable utilities for visualization, callbacks, metrics, and seed/config control.
 """
-import os, random, numpy as np, tensorflow as tf
+
+import os
+import random
 import yaml
+import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_curve, auc
 
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.yaml")
+# ============================================================
+# 1. Configuration & Global Seeding
+# ============================================================
 
-def set_global_seed(seed: int = 42):
+# Locate config.yaml (assumed in ../config/)
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config", "config.yaml")
+
+def get_config():
+    """Load YAML configuration file."""
+    try:
+        with open(CONFIG_PATH, "r") as f:
+            config = yaml.safe_load(f)
+        return config
+    except FileNotFoundError:
+        print("[WARNING] config.yaml not found. Using default parameters.")
+        return {"global": {"seed": 42}, "train": {"early_stopping_patience": 3}}
+
+def set_global_seed(seed: int = 42, verbose: bool = True):
+    """Ensure reproducibility across Python, NumPy, and TensorFlow."""
     np.random.seed(seed)
     random.seed(seed)
     tf.random.set_seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
-    print(f"[INFO] Global seed set to {seed}")
+    if verbose:
+        print(f"[INFO] Global seed set to {seed}")
 
-def get_config():
-    with open(CONFIG_PATH, "r") as f:
-        config = yaml.safe_load(f)
-    return config
+# Load config and apply seed on import
+config = get_config()
+set_global_seed(config["global"]["seed"])
+
+# ============================================================
+# 2. Visualization Utilities
+# ============================================================
+def plot_training_curves(history, metric="accuracy", save_path=None):
+    """Plot training and validation curves."""
+    plt.figure(figsize=(6, 4))
+    plt.plot(history.history.get(metric, []), label=f"train_{metric}")
+    plt.plot(history.history.get(f"val_{metric}", []), label=f"val_{metric}")
+    plt.xlabel("Epoch")
+    plt.ylabel(metric.capitalize())
+    plt.title(f"Training and Validation {metric}")
+    plt.legend()
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(save_path, bbox_inches="tight")
+    plt.show()
+
+def plot_confusion_matrix(y_true, y_pred, class_names=None, save_path=None):
+    """Plot confusion matrix."""
+    cm = confusion_matrix(y_true, y_pred)
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+    disp.plot(cmap="Blues", values_format="d")
+    plt.title("Confusion Matrix")
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(save_path, bbox_inches="tight")
+    plt.show()
+
+def plot_roc_curve(y_true, y_probs, save_path=None):
+    """Plot ROC curve and compute AUC."""
+    fpr, tpr, _ = roc_curve(y_true, y_probs)
+    auc_score = auc(fpr, tpr)
+    plt.figure(figsize=(5, 4))
+    plt.plot(fpr, tpr, label=f"AUC = {auc_score:.3f}")
+    plt.plot([0, 1], [0, 1], "k--")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("ROC Curve")
+    plt.legend()
+    if save_path:
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        plt.savefig(save_path, bbox_inches="tight")
+    plt.show()
+    return auc_score
+
+# ============================================================
+# 3. Callback Utilities
+# ============================================================
+def build_callbacks(task_name, base_dir="Results"):
+    """Create Keras callbacks for checkpointing, early stopping, and TensorBoard."""
+    os.makedirs(os.path.join(base_dir, "logs"), exist_ok=True)
+    os.makedirs(os.path.join(base_dir, "models"), exist_ok=True)
+
+    model_path = os.path.join(base_dir, "models", f"{task_name}_best.h5")
+    tensorboard_dir = os.path.join(base_dir, "logs", task_name)
+
+    callbacks = [
+        tf.keras.callbacks.ModelCheckpoint(
+            model_path, save_best_only=True, monitor="val_loss", verbose=1
+        ),
+        tf.keras.callbacks.EarlyStopping(
+            monitor="val_loss",
+            patience=config["train"]["early_stopping_patience"],
+            restore_best_weights=True,
+        ),
+        tf.keras.callbacks.TensorBoard(log_dir=tensorboard_dir),
+    ]
+    return callbacks, model_path
+
+# ============================================================
+# 4. Metrics Summary Utilities
+# ============================================================
+def summarize_metrics(history, test_metrics):
+    """Summarize and print final metrics from training and evaluation."""
+    final_train = {k: v[-1] for k, v in history.history.items() if not k.startswith("val_")}
+    final_val = {k: v[-1] for k, v in history.history.items() if k.startswith("val_")}
+    summary = {
+        "train_metrics": final_train,
+        "val_metrics": final_val,
+        "test_metrics": {"loss": test_metrics[0], "accuracy": test_metrics[1]},
+    }
+    print("\n=== Final Metrics Summary ===")
+    for section, metrics in summary.items():
+        print(f"{section}: {metrics}")
+    return summary
