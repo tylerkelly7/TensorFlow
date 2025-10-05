@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing import sequence
 from tensorflow.keras.utils import to_categorical
-from config.seeds import set_global_seed, get_config
+from src.utils import set_global_seed, get_config
 
 # ------------------------------------------------------------
 # 1. Load configuration and set seeds
