@@ -10,7 +10,7 @@ Supports reloading via CLI or notebook import.
 import argparse
 import tensorflow as tf
 from src import data as data_utils
-from config.seeds import get_config, set_global_seed
+from src.utils import get_config, set_global_seed
 
 config = get_config()
 set_global_seed(config["global"]["seed"])
