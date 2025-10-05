@@ -74,10 +74,11 @@ def train_task(task="mnist"):
     log_dir = os.path.join(base_dir, "logs")
     model_dir = os.path.join(base_dir, "models")
 
+    # Load dataset and model
     x_train, y_train, x_test, y_test, model = get_task_components(task)
     callbacks, checkpoint_path = get_callbacks(log_dir, model_dir, task)
     
-    # Start experiment tracking
+    # Start experiment tracking (MLflow / W&B)
     run = init_experiment_tracking(task)
     
     print(f"[INFO] Training {task.upper()} model...")
@@ -92,17 +93,23 @@ def train_task(task="mnist"):
 
     print(f"[INFO] Training complete. Best model saved to {checkpoint_path}")
 
+    # Evaluate model
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
-    print(f"[RESULT] {task.upper()} Test Accuracy: {test_acc:.4f}")
-    
-    # Log to MLflow or W&B
+    print(f"[RESULT] {task.upper()} | Test Loss: {test_loss:.4f} | Test Accuracy: {test_acc:.4f}")
+
+    # Log results to MLflow / W&B
+    test_metrics = (test_loss, test_acc)
     log_experiment_metrics(history, test_metrics, run, task)
 
+    # End tracking session
+    end_experiment_tracking()
+
+    # Save final model
     final_model_path = os.path.join(model_dir, f"{task}_final_{datetime.now().strftime('%H%M%S')}.h5")
     model.save(final_model_path)
     print(f"[INFO] Final model saved to {final_model_path}")
 
-    return history, (test_loss, test_acc)
+    return history, test_metrics
 
 
 # ------------------------------------------------------------
