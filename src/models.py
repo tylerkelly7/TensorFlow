@@ -7,7 +7,7 @@ Each model reads hyperparameters from config/config.yaml.
 
 import tensorflow as tf
 from tensorflow.keras import layers, models
-from config.seeds import get_config
+from src.utils import get_config, set_global_seed
 
 config = get_config()
 
