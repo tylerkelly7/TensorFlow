@@ -13,10 +13,12 @@ dependencies:
   - xgboost
   - lightgbm
   - pytorch
+	- tensorflow
   - torchvision
   - torchaudio
   - transformers
   - nltk
+	- tensorflow-datasets
   - spacy
   - shap
   - pip
@@ -76,7 +78,8 @@ dependencies:
   # - pre-commit
   # - black
   # - flake8
-  # - pytest
+  - pytest
+	- pyyaml
   # - pytest-cov
   # - tox
   # - mypy
