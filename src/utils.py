@@ -89,7 +89,7 @@ def plot_roc_curve(y_true, y_probs, save_path=None):
 # ============================================================
 # 3. Callback Utilities
 # ============================================================
-def build_callbacks(task_name, base_dir="Results"):
+def build_callbacks(task_name, base_dir="results"):
     """Create Keras callbacks for checkpointing, early stopping, and TensorBoard."""
     os.makedirs(os.path.join(base_dir, "logs"), exist_ok=True)
     os.makedirs(os.path.join(base_dir, "models"), exist_ok=True)
@@ -182,8 +182,8 @@ def log_experiment_metrics(history, test_metrics, run=None, task_name=None):
     if config["tracking"].get("use_mlflow", False) and run is not None:
         mlflow.log_params(config.get("train", {}))
         mlflow.log_metrics({**train_metrics, **val_metrics, **test_dict})
-        mlflow.log_artifacts("Results/models")
-        mlflow.log_artifacts("Results/logs")
+        mlflow.log_artifacts("results/models")
+        mlflow.log_artifacts("results/logs")
         print(f"[INFO] Logged metrics to MLflow: {test_dict}")
 
     # --- W&B ---
