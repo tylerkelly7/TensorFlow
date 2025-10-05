@@ -25,7 +25,7 @@ set_global_seed(config["global"]["seed"])
 # ------------------------------------------------------------
 # 2. Setup directory structure
 # ------------------------------------------------------------
-def prepare_output_dirs(base_dir="Results"):
+def prepare_output_dirs(base_dir="results"):
     os.makedirs(base_dir, exist_ok=True)
     os.makedirs(os.path.join(base_dir, "logs"), exist_ok=True)
     os.makedirs(os.path.join(base_dir, "models"), exist_ok=True)
