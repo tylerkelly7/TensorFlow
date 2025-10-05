@@ -126,3 +126,66 @@ def summarize_metrics(history, test_metrics):
     for section, metrics in summary.items():
         print(f"{section}: {metrics}")
     return summary
+        
+# ============================================================
+# 5. Experiment Tracking (MLflow / Weights & Biases)
+# ============================================================
+
+import mlflow
+import mlflow.tensorflow
+import wandb
+
+def init_experiment_tracking(task_name):
+    """
+    Initialize MLflow or Weights & Biases tracking session based on config flags.
+    Returns a context manager (for MLflow) or None (for W&B since it auto-handles sessions).
+    """
+    if config["tracking"]["use_mlflow"]:
+        mlflow.set_tracking_uri(config["tracking"]["mlflow_uri"])
+        mlflow.set_experiment(config["tracking"]["experiment_name"])
+        print(f"[INFO] MLflow tracking initialized at {config['tracking']['mlflow_uri']}")
+        return mlflow.start_run(run_name=task_name)
+
+    elif config["tracking"]["use_wandb"]:
+        wandb.login()
+        wandb.init(
+            project=config["tracking"]["wandb_project"],
+            entity=config["tracking"]["wandb_entity"],
+            name=task_name,
+            config=config,
+        )
+        print(f"[INFO] Weights & Biases tracking initialized for {task_name}")
+        return None
+
+    else:
+        print("[INFO] Experiment tracking disabled.")
+        return None
+
+
+def log_experiment_metrics(history, test_metrics, run=None, task_name=None):
+    """
+    Logs metrics and artifacts to MLflow or W&B.
+    """
+    train_metrics = {k: v[-1] for k, v in history.history.items() if not k.startswith("val_")}
+    val_metrics = {k: v[-1] for k, v in history.history.items() if k.startswith("val_")}
+    test_dict = {"test_loss": test_metrics[0], "test_acc": test_metrics[1]}
+
+    # --- MLflow ---
+    if config["tracking"]["use_mlflow"] and run is not None:
+        mlflow.log_params(config["train"])
+        mlflow.log_metrics({**train_metrics, **val_metrics, **test_dict})
+        mlflow.log_artifacts("Results/models")
+        mlflow.log_artifacts("Results/logs")
+        print("[INFO] Metrics logged to MLflow.")
+        mlflow.end_run()
+
+    # --- W&B ---
+    elif config["tracking"]["use_wandb"]:
+        wandb.log({**train_metrics, **val_metrics, **test_dict})
+        wandb.finish()
+        print("[INFO] Metrics logged to Weights & Biases.")   
+    
+    
+    
+    
+    
