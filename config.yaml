@@ -37,3 +37,8 @@ models:
     lstm_units: 64
   transfer_mobilenetv2:
     base_trainable: false
+
+logging:
+  plots_dir: "results/plots/"
+  tensorboard_dir: "results/logs/"
+  save_figures: true
