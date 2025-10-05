@@ -23,3 +23,17 @@ train:
   validation_split: 0.1
   learning_rate: 0.001
   early_stopping_patience: 3
+
+
+models:
+  dense_mnist:
+    hidden_units: [512, 256]
+    dropout_rates: [0.3, 0.2]
+  cnn_cifar10:
+    filters: [32, 64, 128]
+    dense_units: 128
+  rnn_imdb:
+    embed_dim: 128
+    lstm_units: 64
+  transfer_mobilenetv2:
+    base_trainable: false
