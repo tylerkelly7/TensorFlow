@@ -145,6 +145,11 @@ def init_experiment_tracking(task_name):
     if config["tracking"].get("use_mlflow", False):
         mlflow.set_tracking_uri(config["tracking"]["mlflow_uri"])
         mlflow.set_experiment(config["tracking"]["experiment_name"])
+
+        # --- 🟢 Auto-close any previously active run ---
+        if mlflow.active_run():
+            mlflow.end_run()
+
         print(f"[INFO] MLflow tracking initialized → {config['tracking']['mlflow_uri']}")
         run = mlflow.start_run(run_name=task_name)
 
@@ -179,12 +184,12 @@ def log_experiment_metrics(history, test_metrics, run=None, task_name=None):
         mlflow.log_metrics({**train_metrics, **val_metrics, **test_dict})
         mlflow.log_artifacts("Results/models")
         mlflow.log_artifacts("Results/logs")
-        print("[INFO] Logged metrics and artifacts to MLflow.")
+        print(f"[INFO] Logged metrics to MLflow: {test_dict}")
 
     # --- W&B ---
     elif config["tracking"].get("use_wandb", False):
         wandb.log({**train_metrics, **val_metrics, **test_dict})
-        print("[INFO] Logged metrics to Weights & Biases.")
+        print(f"[INFO] Logged metrics to Weights & Biases: {test_dict}")
 
 
 def end_experiment_tracking():
@@ -199,6 +204,8 @@ def end_experiment_tracking():
     if config["tracking"].get("use_wandb", False):
         wandb.finish()
         print("[INFO] W&B session ended successfully.")
-    
-    
+        
+        
+        
+        
     
