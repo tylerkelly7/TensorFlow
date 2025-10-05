@@ -15,6 +15,7 @@ from datetime import datetime
 from config.seeds import set_global_seed, get_config
 from src import data as data_utils
 from src import models as model_utils
+from src.utils import init_experiment_tracking, log_experiment_metrics
 
 # ------------------------------------------------------------
 # 1. Load configuration and seed
@@ -75,7 +76,10 @@ def train_task(task="mnist"):
 
     x_train, y_train, x_test, y_test, model = get_task_components(task)
     callbacks, checkpoint_path = get_callbacks(log_dir, model_dir, task)
-
+    
+    # Start experiment tracking
+    run = init_experiment_tracking(task)
+    
     print(f"[INFO] Training {task.upper()} model...")
     history = model.fit(
         x_train, y_train,
@@ -90,6 +94,9 @@ def train_task(task="mnist"):
 
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
     print(f"[RESULT] {task.upper()} Test Accuracy: {test_acc:.4f}")
+    
+    # Log to MLflow or W&B
+    log_experiment_metrics(history, test_metrics, run, task)
 
     final_model_path = os.path.join(model_dir, f"{task}_final_{datetime.now().strftime('%H%M%S')}.h5")
     model.save(final_model_path)
