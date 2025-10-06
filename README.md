@@ -13,7 +13,7 @@ Includes experiment tracking, CI/CD testing, and modular design similar to profe
 
 ---
 
-## 🚀 Features
+## Features
 - **Data Layer:** Config-driven loading for MNIST, CIFAR-10, IMDB.
 - **Model Architectures:** DNN, CNN, RNN, and MobileNetV2 transfer learning.
 - **Training Pipeline:** Early stopping, checkpoints, TensorBoard visualization.
@@ -111,8 +111,8 @@ Continuous Integration automatically runs via GitHub Actions on every push.
 This repository is complete through Docker & Deployment Integration**.  
 Planned next steps for continued development include:
 
-| Task | Name | Goal |
-|------|------|------|
+| Task | Goal |
+|------|------|
 | **Hyperparameter Tuning + MLflow Integration** | Add `src/tune.py` for config-driven tuning (grid/random search) with automatic MLflow logging. |
 | **Model Registry + Versioned Artifacts** | Register best MLflow runs as versioned models; enable lineage tracking. |
 | **Inference API + FastAPI Deployment** | Build REST endpoint (`src/api.py`) exposing `/predict` with trained model. |
@@ -124,7 +124,7 @@ Planned next steps for continued development include:
 
 ---
 
-## 👨‍💻 Author
+## Author
 **Tyler Kelly**  
 M.S. Biostatistics — University of Pittsburgh  
 Portfolio: [github.com/tylerkelly7](https://github.com/tylerkelly7)
