@@ -1,4 +1,4 @@
-name: CI
+name: TensorFlow CI
 
 on:
   push:
