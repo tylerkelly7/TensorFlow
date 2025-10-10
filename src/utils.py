@@ -16,7 +16,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, roc_curve,
 # ============================================================
 
 # Locate config.yaml (assumed in ../config/)
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config", "config.yaml")
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "configs", "config.yaml")
 
 def get_config():
     """Load YAML configuration file."""
