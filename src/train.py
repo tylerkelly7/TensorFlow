@@ -12,14 +12,14 @@ import argparse
 import os
 import tensorflow as tf
 from datetime import datetime
-from src.utils import get_config, set_global_seed
 from src import data_prep as data_utils
 from src import models as model_utils
 from src.utils import (
     init_experiment_tracking,
     log_experiment_metrics,
     end_experiment_tracking,
-    config as shared_config
+    config as shared_config,
+    set_global_seed
     )
 
 # ------------------------------------------------------------
@@ -65,7 +65,7 @@ def get_callbacks(log_dir, model_dir, task):
     checkpoint_path = os.path.join(model_dir, f"{task}_best_{timestamp}.h5")
     callbacks = [
         tf.keras.callbacks.ModelCheckpoint(checkpoint_path, save_best_only=True, monitor="val_loss"),
-        tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=config["train"]["early_stopping_patience"], restore_best_weights=True),
+        tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=shared_config["train"]["early_stopping_patience"], restore_best_weights=True),
         tf.keras.callbacks.TensorBoard(log_dir=os.path.join(log_dir, f"{task}_{timestamp}"))
     ]
     return callbacks, checkpoint_path
