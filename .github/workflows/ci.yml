@@ -69,14 +69,13 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # ✅ Fast local build — no remote cache upload
-      - name: Build Docker Image
+      - name: Build Docker Image with Makefile
         run: |
           echo "[INFO] Building Docker image for TensorFlow..."
-          docker build -t tensorflow .
+          make build
 
-      # ✅ Run lightweight smoke test to verify TensorFlow loads
+      # Run standardized smoke test via Makefile
       - name: Run Container Smoke Test
         run: |
-          echo "[INFO] Running container smoke test..."
-          docker run --rm tensorflow python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__)"
+          echo "[INFO] Running standardized smoke test..."
+          make smoke
