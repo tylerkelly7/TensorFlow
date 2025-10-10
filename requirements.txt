@@ -50,9 +50,9 @@ joblib
 # darts
 
 # MLOps / Experiment Tracking
-# mlflow
-# wandb
-# tensorboard
+mlflow
+wandb
+tensorboard
 # hydra-core
 # prefect
 # dagster
