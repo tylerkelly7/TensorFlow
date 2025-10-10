@@ -3,7 +3,7 @@ tests/test_data.py
 Verifies data loading, shapes, and value ranges.
 """
 
-from src import data
+from src import data_prep
 import numpy as np
 
 def test_mnist_shapes():
