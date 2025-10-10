@@ -5,7 +5,7 @@ Runs a 1-epoch smoke test on MNIST model to confirm training loop works.
 
 import tensorflow as tf
 from src.train import train_task
-from config.seeds import set_global_seed
+from src.utils import set_global_seed
 
 def test_train_task_mnist_smoke(monkeypatch):
     # shorten epochs to speed up CI
