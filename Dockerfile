@@ -13,15 +13,23 @@ WORKDIR /app
 # ---- Copy project files ----
 COPY . /app
 
-# ---- Install dependencies ----
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
-RUN pip install --upgrade pip
+# ---- System dependencies ----
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# ---- Upgrade pip & core build tools ----
+RUN pip install --upgrade pip setuptools wheel
+
+# ---- Install project dependencies ----
 RUN pip install --no-cache-dir --ignore-installed blinker -r requirements.txt
 
 # ---- Environment variables ----
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    TF_CPP_MIN_LOG_LEVEL=2
+    TF_CPP_MIN_LOG_LEVEL=2 \
+    USE_MLFLOW=false \
+    USE_WANDB=false
 
-# ---- Default command ----
+# ---- Entrypoint ----
 CMD ["python", "-m", "src.train", "--task", "mnist"]
