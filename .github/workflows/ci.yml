@@ -40,6 +40,10 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
+      - name: Install Project in Editable Mode
+        run: |
+          pip install -e .
+
       - name: Run Tests with Coverage
         env:
           TF_CPP_MIN_LOG_LEVEL: 2
