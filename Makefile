@@ -60,3 +60,30 @@ inspect:
 smoke:
 	@echo "[INFO] Verifying TensorFlow installation..."
 	docker run --rm $(IMAGE_NAME) python -c "import tensorflow as tf; print('TensorFlow version:', tf.__version__)"
+
+# ------------------------------------------------------------
+# Publishing
+# ------------------------------------------------------------
+
+# Tag local image for registry
+tag:
+	@echo "[INFO] Tagging image as $(IMAGE_URI)"
+	docker tag $(IMAGE_NAME) $(IMAGE_URI)
+
+# Authenticate to registry (Docker Hub or GHCR)
+login:
+	@echo "[INFO] Logging in to registry: $(REGISTRY)"
+ifeq ($(REGISTRY),docker.io)
+	docker login -u $(DOCKER_USER)
+else
+	echo "${GH_TOKEN}" | docker login $(REGISTRY) -u $(DOCKER_USER) --password-stdin
+endif
+
+# Publish image to registry
+publish: build tag
+	@echo "[INFO] Publishing $(IMAGE_URI)..."
+	$(MAKE) login
+	docker push $(IMAGE_URI)
+	@echo "[SUCCESS] Image published: $(IMAGE_URI)"
+
+
