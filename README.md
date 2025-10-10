@@ -108,7 +108,7 @@ Continuous Integration automatically runs via GitHub Actions on every push.
 
 ## Next Steps
 
-This repository is complete through Docker & Deployment Integration**.  
+This repository is complete through Docker & Deployment Integration.  
 Planned next steps for continued development include:
 
 | Task | Goal |
