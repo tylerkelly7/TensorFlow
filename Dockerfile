@@ -5,7 +5,7 @@
 # ============================================================
 
 # ---- Base image ----
-FROM tensorflow/tensorflow:2.14.0
+FROM python:3.11-slim
 
 # ---- Set working directory ----
 WORKDIR /app
@@ -20,8 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # ---- Upgrade pip & core build tools ----
 RUN pip install --upgrade pip setuptools wheel
-
-# ---- Install project dependencies ----
+RUN pip install --no-cache-dir tensorflow==2.14.0 "numpy<1.26"
 RUN pip install --no-cache-dir --ignore-installed blinker -r requirements.txt
 
 # ---- Environment variables ----
