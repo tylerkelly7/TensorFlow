@@ -13,5 +13,5 @@ setup(
         "pyyaml"
     ],
     author="Tyler Kelly",
-    package_dir={"": "src"},
+    package_dir={"": "."},
 )
