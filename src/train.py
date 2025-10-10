@@ -19,14 +19,13 @@ from src.utils import (
     init_experiment_tracking,
     log_experiment_metrics,
     end_experiment_tracking,
-    get_config
+    config as shared_config
     )
 
 # ------------------------------------------------------------
 # 1. Load configuration and seed
 # ------------------------------------------------------------
-config = get_config()
-set_global_seed(config["global"]["seed"])
+set_global_seed(shared_config["global"]["seed"])
 
 # ------------------------------------------------------------
 # 2. Setup directory structure
@@ -75,7 +74,7 @@ def get_callbacks(log_dir, model_dir, task):
 # 5. Training function
 # ------------------------------------------------------------
 def train_task(task="mnist"):
-    base_dir = prepare_output_dirs(config["global"]["output_dir"])
+    base_dir = prepare_output_dirs(shared_config["global"]["output_dir"])
     log_dir = os.path.join(base_dir, "logs")
     model_dir = os.path.join(base_dir, "models")
 
@@ -89,9 +88,9 @@ def train_task(task="mnist"):
     print(f"[INFO] Training {task.upper()} model...")
     history = model.fit(
         x_train, y_train,
-        validation_split=config["train"]["validation_split"],
-        epochs=config["train"]["epochs"],
-        batch_size=config["train"]["batch_size"],
+        validation_split=shared_config["train"]["validation_split"],
+        epochs=shared_config["train"]["epochs"],
+        batch_size=shared_config["train"]["batch_size"],
         callbacks=callbacks,
         verbose=2,
     )
