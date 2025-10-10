@@ -1,5 +1,5 @@
 # Core Python libraries for ML & Data Science
-numpy
+numpy<1.26 #Matches TensorFlow 2.14's ABI expectations
 pandas
 scikit-learn
 matplotlib
@@ -9,7 +9,7 @@ jupyter
 # Advanced ML
 xgboost
 lightgbm
-tensorflow>=2.10,<3
+tensorflow==2.14
 torch
 torchvision
 torchaudio
