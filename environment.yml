@@ -46,9 +46,9 @@ dependencies:
   # - gluonts
   # - darts
 
-  # - mlflow
-  # - wandb
-  # - tensorboard
+  - mlflow
+  - wandb
+  - tensorboard
   # - hydra-core
   # - prefect
   # - dagster
