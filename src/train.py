@@ -13,7 +13,7 @@ import os
 import tensorflow as tf
 from datetime import datetime
 from src.utils import get_config, set_global_seed
-from src import data as data_utils
+from src import data_prep as data_utils
 from src import models as model_utils
 from src.utils import init_experiment_tracking, log_experiment_metrics
 
