@@ -70,16 +70,16 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       # Build Docker image using caching
-      - name: 🐳 Verify Docker Build (with caching)
+      - name: Verify Docker Build (with caching)
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: false
-          load: true
+          load: false
           tags: tensorflow:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
 
       # Run lightweight smoke test inside container
       - name: Run Container Smoke Test
