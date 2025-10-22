@@ -5,6 +5,10 @@ on:
     branches: [ main, master ]
   pull_request:
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   # ------------------------------------------------------------
   # Run Unit + Integration Tests
