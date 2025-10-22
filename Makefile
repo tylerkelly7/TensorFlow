@@ -65,25 +65,36 @@ smoke:
 # Publishing
 # ------------------------------------------------------------
 
-# Tag local image for registry
+# 🏷️ Tag local image for registry
 tag:
-	@echo "[INFO] Tagging image as $(IMAGE_URI)"
-	docker tag $(IMAGE_NAME) $(IMAGE_URI)
+	@if [ -z "$(REGISTRY)" ] || [ -z "$(DOCKER_USER)" ] || [ -z "$(TAG)" ]; then \
+		echo "[ERROR] Missing REGISTRY, DOCKER_USER, or TAG variables."; \
+		echo "Usage: make publish REGISTRY=ghcr.io DOCKER_USER=tylerkelly7 TAG=latest"; \
+		exit 1; \
+	fi
+	@echo "[INFO] Tagging image as $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)"
+	docker tag $(IMAGE_NAME) $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
 
-# Authenticate to registry (Docker Hub or GHCR)
+# 🔐 Authenticate to registry (Docker Hub or GHCR)
 login:
+	@if [ -z "$(REGISTRY)" ] || [ -z "$(DOCKER_USER)" ]; then \
+		echo "[ERROR] Missing REGISTRY or DOCKER_USER variables."; \
+		exit 1; \
+	fi
 	@echo "[INFO] Logging in to registry: $(REGISTRY)"
 ifeq ($(REGISTRY),docker.io)
 	docker login -u $(DOCKER_USER)
 else
-	echo "${GH_TOKEN}" | docker login $(REGISTRY) -u $(DOCKER_USER) --password-stdin
+	echo "$${GH_TOKEN}" | docker login $(REGISTRY) -u $(DOCKER_USER) --password-stdin
 endif
 
-# Publish image to registry
+# 🚀 Publish image to registry
 publish: build tag
-	@echo "[INFO] Publishing $(IMAGE_URI)..."
+	@if [ -z "$(REGISTRY)" ] || [ -z "$(DOCKER_USER)" ]; then \
+		echo "[ERROR] Missing REGISTRY or DOCKER_USER variables."; \
+		exit 1; \
+	fi
+	@echo "[INFO] Publishing image to $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)"
 	$(MAKE) login
-	docker push $(IMAGE_URI)
-	@echo "[SUCCESS] Image published: $(IMAGE_URI)"
-
-
+	docker push $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
+	@echo "[SUCCESS] Image published: $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)"
