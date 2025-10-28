@@ -1,4 +1,4 @@
-# ============================================================
+ # ============================================================
 # TensorFlow - Makefile
 # Author: Tyler Kelly
 # Purpose: Build, run, train, and clean TensorFlow Docker project
@@ -88,7 +88,7 @@ else
 	echo "$${GH_TOKEN}" | docker login $(REGISTRY) -u $(DOCKER_USER) --password-stdin
 endif
 
-# 🚀 Publish image to registry
+# 🚀 Publish image to registry (with retry logic for GHCR)
 publish: build tag
 	@if [ -z "$(REGISTRY)" ] || [ -z "$(DOCKER_USER)" ]; then \
 		echo "[ERROR] Missing REGISTRY or DOCKER_USER variables."; \
@@ -96,10 +96,17 @@ publish: build tag
 	fi
 	@echo "[INFO] Publishing image to $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)"
 	$(MAKE) login
-	docker push --disable-content-trust=true $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
+	@echo "[INFO] Starting push attempts (max 3)..."
+	@for i in 1 2 3; do \
+		docker push --disable-content-trust=true $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG) && break || \
+		( echo "[WARN] Push attempt $$i failed, retrying in 30s..." && sleep 30 ); \
+	done
 	@echo "[SUCCESS] Image published: $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)"
 
 	@echo "[INFO] Tagging 'latest' for convenience..."
 	docker tag $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG) $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):latest
-	docker push --disable-content-trust=true $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):latest
+	@for i in 1 2 3; do \
+		docker push --disable-content-trust=true $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):latest && break || \
+		( echo "[WARN] Push attempt $$i (latest) failed, retrying in 30s..." && sleep 30 ); \
+	done
 	@echo "[SUCCESS] 'latest' tag updated."
