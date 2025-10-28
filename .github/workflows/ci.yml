@@ -112,7 +112,9 @@ jobs:
           TAG: ${{ github.run_number }}
         run: |
           echo "[INFO] Publishing Docker image..."
-          make publish
+          for i in 1 2 3; do
+            make publish && break || echo "[WARN] Publish attempt $i failed, retrying in 30s..." && sleep 30;
+          done
 
 
 
