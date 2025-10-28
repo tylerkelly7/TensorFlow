@@ -1,11 +1,12 @@
 # TensorFlow
 
 ![Build](https://github.com/tylerkelly7/TensorFlow/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/tylerkelly7/TensorFlow/branch/main/graph/badge.svg)](https://codecov.io/gh/tylerkelly7/TensorFlow)
+![GHCR](https://img.shields.io/badge/ghcr.io/tylerkelly7/tensorflow-blue?logo=github)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange)
 ![Docker](https://img.shields.io/badge/docker-ready-blue)
-![Coverage](https://img.shields.io/badge/coverage-85%25-green)
 ![Docs](https://img.shields.io/badge/docs-online-blue)
 
 End-to-end TensorFlow repository demonstrating model development, reproducibility, and MLOps practices.  
