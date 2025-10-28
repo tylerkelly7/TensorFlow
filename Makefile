@@ -98,3 +98,8 @@ publish: build tag
 	$(MAKE) login
 	docker push $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
 	@echo "[SUCCESS] Image published: $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG)"
+
+  @echo "[INFO] Tagging 'latest' for convenience..."
+	docker tag $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):$(TAG) $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):latest
+	docker push $(REGISTRY)/$(DOCKER_USER)/$(IMAGE_NAME):latest
+	@echo "[SUCCESS] 'latest' tag updated."
